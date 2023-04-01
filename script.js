@@ -160,27 +160,50 @@ function addproduct(data){
     let col4 = document.createElement("th");
     let col5 = document.createElement("th");
     let col6 = document.createElement("th");
+    let col7 = document.createElement("th");
 
-    col1.innerHTML = data[data.length-1].id+1;
+    id=col1.innerHTML = data[data.length-1].id+1;
     col2.innerHTML = data[data.length-1].title;
     col3.innerHTML = data[data.length-1].price;
     col4.innerHTML = data[data.length-1].category;
     col5.innerHTML = "<img style=\"width:100px\" src="+data[data.length-1].image+">";
     col6.innerHTML = "<button  style=\"width:50px\" class=\"btn btn-primary\"  \">"+del+"</button>";
+    col7.innerHTML = "<button  style=\"width:50px\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#exampleModal\" \">"+update+"</button>";
+    
+    row.setAttribute("id", id);
+    col7.addEventListener("click", ()=>{
+        
+        document.getElementById("idInput").value = row.children[0].innerHTML;
+        document.getElementById("nameInput").value = row.children[1].innerHTML;
+        document.getElementById("priceInput").value = parseInt(row.children[2].innerHTML);
+        document.getElementById("descriptionInput").value = row.children[3].innerHTML;
+        document.getElementById("imageInput").value = row.children[4].children[0].src;
+        $("#updateProductBtn").click(function(){
+            updateProducts(id);
+        })
 
+    
+    })
     col6.addEventListener("click", ()=>{
-        document.getElementById("nameInput2").value = data[data.length-1].title;
-        document.getElementById("priceInput2").value = data[data.length-1].price;
-        document.getElementById("descriptionInput2").value = data[data.length-1].category;
-        document.getElementById("idInput2").value = data[data.length-1].id;
-        document.getElementById("imageInput2").value = data[data.length-1].image;
 
-        let id = data[data.length-1].id;
-        console.log(id);
-        let row = document.getElementById(id);
+
         row.remove();
+        fetch('https://fakestoreapi.com/products/'+id,{
+            method:"DELETE",
+            body:JSON.stringify(
+                {
+                })
+            })
+                .then(res=>res.json())
+                .then(json=>console.log(json))
+
+
+
+        
+
         
     })
+    
 
     row.appendChild(col1);
     row.appendChild(col2);
@@ -188,7 +211,7 @@ function addproduct(data){
     row.appendChild(col4);
     row.appendChild(col5);
     row.appendChild(col6);
-
+    row.appendChild(col7);
     table.appendChild(row);
 
     fetch('https://fakestoreapi.com/products',{
@@ -220,6 +243,7 @@ function updateProducts(){
     row[2].innerHTML = price;
     row[3].innerHTML = description;
     row[4].innerHTML = "<img style=\"width:100px\" src="+image+">";
+
     
     console.log(row);
     fetch('https://fakestoreapi.com/products/'+id,{
